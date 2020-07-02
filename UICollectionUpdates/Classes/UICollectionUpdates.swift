@@ -10,13 +10,13 @@ import Foundation
 /// List of updates for collection
 public struct UICollectionUpdates: Equatable {
     
-    public var reloadIndexPaths = [IndexPath]()
-    public var deleteIndexPaths = [IndexPath]()
-    public var insertIndexPaths = [IndexPath]()
+    public var reloadIndexPaths: [IndexPath] = []
+    public var deleteIndexPaths: [IndexPath] = []
+    public var insertIndexPaths: [IndexPath] = []
 
-    public var reloadSections = IndexSet()
-    public var deleteSections = IndexSet()
-    public var insertSections = IndexSet()
+    public var reloadSections: IndexSet = []
+    public var deleteSections: IndexSet = []
+    public var insertSections: IndexSet = []
 
     public var isEmpty: Bool {
         return reloadIndexPaths.isEmpty
@@ -25,6 +25,20 @@ public struct UICollectionUpdates: Equatable {
         && reloadSections.isEmpty
         && deleteSections.isEmpty
         && insertSections.isEmpty
+    }
+    
+    public init(reloadIndexPaths: [IndexPath] = [],
+                deleteIndexPaths: [IndexPath] = [],
+                insertIndexPaths: [IndexPath] = [],
+                reloadSections: IndexSet = [],
+                deleteSections: IndexSet = [],
+                insertSections: IndexSet = []) {
+        self.reloadIndexPaths = reloadIndexPaths
+        self.deleteIndexPaths = deleteIndexPaths
+        self.insertIndexPaths = insertIndexPaths
+        self.reloadSections = reloadSections
+        self.deleteSections = deleteSections
+        self.insertSections = insertSections
     }
 
     // MARK: getters
@@ -123,6 +137,49 @@ public struct UICollectionUpdates: Equatable {
 }
 
 extension UICollectionUpdates {
+    
+    /// Updates for one section, based on a diff
+    /// - Parameter diff: Diff of models
+    /// - Parameter section: Section to update
+    @available(iOS 13, *)
+    public init<T>(diff: CollectionDifference<T>, section: Int) {
+        func indexPath(from index: Int) -> IndexPath {
+            return IndexPath(row: index, section: section)
+        }
+        
+        insertIndexPaths = diff.insertions.map { change in
+            switch change {
+            case .insert(let offset, _, _), .remove(let offset, _, _):
+                return indexPath(from: offset)
+            }
+        }
+        deleteIndexPaths = diff.removals.map { change in
+            switch change {
+            case .insert(let offset, _, _), .remove(let offset, _, _):
+                return indexPath(from: offset)
+            }
+        }
+    }
+    
+    /// Updates for sections, based on a diff
+    /// - Parameter diff: Diff of models
+    @available(iOS 13, *)
+    public init<T>(diff: CollectionDifference<T>) {
+        insertSections = diff.insertions.map { change in
+            switch change {
+            case .insert(let offset, _, _), .remove(let offset, _, _):
+                return offset
+            }
+        }
+        .reduce(into: []) { $0.insert($1) }
+        deleteSections = diff.removals.map { change in
+            switch change {
+            case .insert(let offset, _, _), .remove(let offset, _, _):
+                return offset
+            }
+        }
+        .reduce(into: []) { $0.insert($1) }
+    }
 
     public init(sectionUpdates: UICollectionSectionUpdates, section: Int) {
         let convert: (Int) -> IndexPath = { (index) -> IndexPath in
