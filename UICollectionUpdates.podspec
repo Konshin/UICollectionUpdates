@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'UICollectionUpdates'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'Wrapper for UITableView and UICollectionView updates with model-oriented behavior'
 
 # This description is used to generate tags and improve search results.
