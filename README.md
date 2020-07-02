@@ -1,5 +1,7 @@
 # UICollectionUpdates
 
+Wrapper for UITableView and UICollectionView model-oriented batch updates. Supports safe batch updates (In case of throw you can perform reloadData())
+
 [![CI Status](https://img.shields.io/travis/konshin/UICollectionUpdates.svg?style=flat)](https://travis-ci.org/konshin/UICollectionUpdates)
 [![Version](https://img.shields.io/cocoapods/v/UICollectionUpdates.svg?style=flat)](https://cocoapods.org/pods/UICollectionUpdates)
 [![License](https://img.shields.io/cocoapods/l/UICollectionUpdates.svg?style=flat)](https://cocoapods.org/pods/UICollectionUpdates)
