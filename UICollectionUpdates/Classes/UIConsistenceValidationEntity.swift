@@ -20,24 +20,37 @@ protocol UIConsistenceValidationEntity {
     
 }
 
+enum UIConsistenceError: Error, LocalizedError {
+    case sections(changeInCollection: Int, changeInUpdates: Int)
+    case items(changeInCollection: [Int: Int], changeInUpdates: [Int: Int])
+    
+    var errorDescription: String? {
+        switch self {
+        case .sections(let changeInCollection, let changeInUpdates):
+            return "Inconsistance update of sections: \(changeInCollection) in the collection and \(changeInUpdates) in the update"
+        case .items(let changeInCollection, let changeInUpdates):
+            return "Inconsistance update of items: \(changeInCollection) in the collection and \(changeInUpdates) in the update"
+        }
+    }
+}
+
 extension UIConsistenceValidationEntity {
     
-    func validateConsistency(updates: UICollectionUpdates) -> Bool {
+    func validateConsistency(updates: UICollectionUpdates) throws {
         let numberOfSections = self.numberOfSections
         let numberOfSectionsInDatasource = self.numberOfSectionsFromDataSource ?? 0
         let quantitativeChangeOfSections = updates.quantitativeChangeOfSections
 
-        if (numberOfSectionsInDatasource - numberOfSections) != quantitativeChangeOfSections {
-            return false
+        let chengeInCollection = numberOfSectionsInDatasource - numberOfSections
+        if chengeInCollection != quantitativeChangeOfSections {
+            throw UIConsistenceError.sections(changeInCollection: chengeInCollection, changeInUpdates: quantitativeChangeOfSections)
         }
 
         let quantitativeChangesOfItems = updates.quantitativeChangeOfItems
         let quantitativeChangesByDatasource = quantitativeChangeOfItems(updates: updates)
         if quantitativeChangesOfItems != quantitativeChangesByDatasource {
-            return false
+            throw UIConsistenceError.items(changeInCollection: quantitativeChangesOfItems, changeInUpdates: quantitativeChangesByDatasource)
         }
-
-        return true
     }
     
     private func quantitativeChangeOfItems(updates: UICollectionUpdates) -> [Int: Int] {

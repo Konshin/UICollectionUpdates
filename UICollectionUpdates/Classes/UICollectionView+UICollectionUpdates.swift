@@ -23,9 +23,7 @@ extension UICollectionView: UICollection {
             return
         }
 
-        if !validateConsistency(updates: updates) {
-            throw UICollectionUpdateError.inconsistency
-        }
+        try validateConsistency(updates: updates)
 
         performBatchUpdates({
             deleteSections(updates.deleteSections)

@@ -18,9 +18,7 @@ extension UITableView: UICollection {
     public func perform(updates: UICollectionUpdates, with animation: RowAnimation, completion: ((Bool) -> Void)? = nil) throws {
         guard !updates.isEmpty else { return }
 
-        if !validateConsistency(updates: updates) {
-            throw UICollectionUpdateError.inconsistency
-        }
+        try validateConsistency(updates: updates)
 
         beginUpdates()
 

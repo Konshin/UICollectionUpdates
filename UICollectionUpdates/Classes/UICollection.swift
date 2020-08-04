@@ -8,10 +8,6 @@
 
 import UIKit
 
-enum UICollectionUpdateError: Error {
-    case inconsistency
-}
-
 public protocol UICollection {
 
     associatedtype RowAnimation
@@ -41,8 +37,8 @@ extension UICollection {
 
 extension UICollection where RowAnimation == Void {
 
-    public func perform(updates: UICollectionUpdates) throws {
-        performOrReload(updates: updates, with: Void())
+    public func perform(updates: UICollectionUpdates, completion: ((Bool) -> Void)? = nil) throws {
+        try perform(updates: updates, with: Void(), completion: completion)
     }
 
     public func performOrReload(updates: UICollectionUpdates) {
