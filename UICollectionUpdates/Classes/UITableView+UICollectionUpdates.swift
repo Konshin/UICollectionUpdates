@@ -35,28 +35,5 @@ extension UITableView: UICollection {
         endUpdates()
         completion?(true)
     }
-    
-    // MARK: - private
-
-    private func validateConsistency(updates: UICollectionUpdates) -> Bool {
-        let numberOfSections = self.numberOfSections
-        let numberOfSectionsInDatasource = self.dataSource?.numberOfSections?(in: self) ?? 1
-        let quantitativeChangeOfSections = updates.quantitativeChangeOfSections
-
-        if (numberOfSectionsInDatasource - numberOfSections) != quantitativeChangeOfSections {
-            return false
-        }
-
-        let quantitativeChangesOfItems = updates.quantitativeChangeOfItems
-        for (section, change) in quantitativeChangesOfItems {
-            let numberOfRows = self.numberOfRows(inSection: section)
-            let numberOfItemsInDatasource = self.dataSource?.tableView(self, numberOfRowsInSection: section) ?? 0
-            if (numberOfItemsInDatasource - numberOfRows) != change {
-                return false
-            }
-        }
-
-        return true
-    }
 
 }

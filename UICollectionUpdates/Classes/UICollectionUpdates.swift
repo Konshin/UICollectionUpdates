@@ -57,6 +57,8 @@ public struct UICollectionUpdates: Equatable {
         deleteIndexPaths.forEach {
             result[$0.section, default: 0] -= 1
         }
+        
+        result = result.filter { $0.value != 0 }
 
         return result
     }

@@ -38,54 +38,5 @@ extension UICollectionView: UICollection {
         },
                             completion: completion)
     }
-    
-    // MARK: - private
-
-    private func validateConsistency(updates: UICollectionUpdates) -> Bool {
-        let numberOfSections = self.numberOfSections
-        let numberOfSectionsInDatasource = self.dataSource?.numberOfSections?(in: self) ?? 0
-        let quantitativeChangeOfSections = updates.quantitativeChangeOfSections
-
-        if (numberOfSectionsInDatasource - numberOfSections) != quantitativeChangeOfSections {
-            return false
-        }
-
-        let quantitativeChangesOfItems = updates.quantitativeChangeOfItems
-        let quantitativeChangesByDatasource = quantitativeChangeOfItems(updates: updates)
-        if quantitativeChangesOfItems != quantitativeChangesByDatasource {
-            return false
-        }
-
-        return true
-    }
-
-    private func quantitativeChangeOfItems(updates: UICollectionUpdates) -> [Int: Int] {
-        var result = [Int: Int]()
-
-        var dataSourceSection = -1
-        for section in 0..<numberOfSections {
-            dataSourceSection += 1
-            if updates.insertSections.contains(dataSourceSection) {
-                dataSourceSection += 1
-                continue
-            }
-            if updates.deleteSections.contains(section) {
-                dataSourceSection -= 1
-                continue
-            }
-            if updates.reloadSections.contains(section) {
-                continue
-            }
-
-            let numberOfRows = self.numberOfItems(inSection: section)
-            let numberOfItemsInDatasource = self.dataSource?.collectionView(self, numberOfItemsInSection: dataSourceSection) ?? 0
-            let change = numberOfItemsInDatasource - numberOfRows
-            if change != 0 {
-                result[section] = change
-            }
-        }
-
-        return result
-    }
 
 }
