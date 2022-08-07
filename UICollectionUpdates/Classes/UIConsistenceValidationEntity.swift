@@ -5,7 +5,7 @@
 //  Created by Aleksei Konshin on 04.08.2020.
 //
 
-import Foundation
+import UIKit
 
 /// An entity that can be chacked for consistance with datasource
 protocol UIConsistenceValidationEntity {
