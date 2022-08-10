@@ -140,7 +140,7 @@ public struct UICollectionUpdates: Equatable {
 
 extension UICollectionUpdates {
     
-    /// Updates for one section, based on a diff
+    /// Updates, based on a diff
     /// - Parameter diff: Diff of models
     /// - Parameter section: Section to update
     @available(iOS 13, *)
@@ -163,7 +163,7 @@ extension UICollectionUpdates {
         }
     }
     
-    /// Updates for sections, based on a diff
+    /// Updates, based on a diff
     /// - Parameter diff: Diff of models
     @available(iOS 13, *)
     public init<T>(diff: CollectionDifference<T>) {
